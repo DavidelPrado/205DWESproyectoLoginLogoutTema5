@@ -17,9 +17,9 @@
              */
         
             echo '<h1>PROYECTO LOGIN LOGOFF - PROGRAMA</h1>';
-        
-            
         ?>
+        <a href="./login.php">Salir</a>
+        <a href="./detalle.php">Detalle</a>
         <footer>
             <table>
                 <tr>
