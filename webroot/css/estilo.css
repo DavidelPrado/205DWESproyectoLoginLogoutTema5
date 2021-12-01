@@ -1,0 +1,30 @@
+h1{
+    text-align: center;
+}
+a{
+    text-decoration: none;
+}
+th, td{
+    border: solid 1px black;
+}
+
+footer{
+    background-color: brown;
+    position: absolute;
+    text-align: center;
+    width: 98%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 10px;
+    color: white;
+    bottom: 10px;
+}
+footer table{
+    margin: auto;
+}
+footer td{
+    border: none;
+}
+table img{
+    border-radius: 5px;
+}
