@@ -69,13 +69,13 @@ if (!isset($_SESSION['usuarioDAW205AppLoginLogoutTema5'])) {
             echo '<h3>PHPInfo: <h3>';
             phpinfo();
         ?>
-        <!--<footer>
+        <footer>
             <table>
                 <tr>
                     <td><p>David del Prado Losada - DAW2</p></td>
                     <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
-        </footer>-->
+        </footer>
     </body>
 </html>

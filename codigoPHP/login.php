@@ -148,7 +148,7 @@
                 margin-top: 30px;
             }
             p{
-                color: red;
+                color: white;
             }
         </style>
         <title>Login</title>

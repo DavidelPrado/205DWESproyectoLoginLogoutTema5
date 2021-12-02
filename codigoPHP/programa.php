@@ -24,6 +24,12 @@ if(isset($_REQUEST['detalle'])){
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../webroot/css/estilo.css">
+        <style>
+            input{
+                font-size: 20px;
+                font-weight: bold;
+            }
+        </style>
         <title>programa</title>
     </head>
     <body>
@@ -39,8 +45,8 @@ if(isset($_REQUEST['detalle'])){
         ?>
         
         <form action="<?php $_SERVER['PHP_SELF'] ?>" method='post'>
-            <input type='submit' name='logout' value='logout'/>
-            <input type='submit' name='detalle' value='detalle'/>
+            <input type='submit' name='logout' value='Logout'/>
+            <input type='submit' name='detalle' value='Detalle'/>
         </form>
         
          <?php
