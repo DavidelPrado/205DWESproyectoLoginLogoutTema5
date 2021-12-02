@@ -5,15 +5,27 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="webroot/css/estilo.css">
+        <style>
+            .main{
+                margin-left: 35%;
+                width: 30%;
+                height: 50px;
+                background-color: rgba(165, 42, 42 ,0.9);
+                text-align: center;
+                line-height: 50px;
+            }
+            .btn{
+                font-size: 20px;
+                color: white;
+                font-weight: bold;
+            }
+        </style>
         <title>Index proyecto Login Logout</title>
     </head>
     <body>
         <h1>Index proyecto Login Logout</h1>
         <div class="main">
-            <a href="./codigoPHP/login.php">Login</a>
-            
-            
-            
+            <a href="./codigoPHP/login.php" class="btn">Login</a>
         </div>
         
         <footer>

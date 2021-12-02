@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['usuarioDAW205AppLoginLogoutTema5'])) {
+    header('Location: login.php');
+}
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,8 +24,23 @@
              */
         
             echo '<h1>PROYECTO LOGIN LOGOFF - DETALLE</h1>';
-        
+            
+            ?>
+                <a href="programa.php">Aceptar</a>
+            <?php 
+            
             echo '<h3>Contenido de las variables superglobales: <h3>';
+            
+            echo '<h4>Variable $_SESSION: </h4>';
+            echo '<pre>';
+            print_r($_SESSION);
+            echo '</pre>';
+            
+            echo '<h4>Variable $_COOKIE: </h4>';
+            echo '<pre>';
+            print_r($_COOKIE);
+            echo '</pre>';
+            
             echo '<h4>Variable $GLOBALS: </h4>';
             echo '<pre>';
             print_r($GLOBALS);
@@ -27,11 +49,6 @@
             echo '<h4>Variable $_SERVER: </h4>';
             echo '<pre>';
             print_r($_SERVER);
-            echo '</pre>';
-            
-            echo '<h4>Variable $_SESSION: </h4>';
-            echo '<pre>';
-            
             echo '</pre>';
             
             echo '<h4>Variable $_FILES: </h4>';
@@ -52,13 +69,13 @@
             echo '<h3>PHPInfo: <h3>';
             phpinfo();
         ?>
-        <footer>
+        <!--<footer>
             <table>
                 <tr>
                     <td><p>David del Prado Losada - DAW2</p></td>
                     <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
-        </footer>
+        </footer>-->
     </body>
 </html>

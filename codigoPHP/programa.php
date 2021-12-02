@@ -1,3 +1,22 @@
+<?php
+session_start();
+if (!isset($_SESSION['usuarioDAW205AppLoginLogoutTema5'])) {
+    header('Location: login.php');
+}
+
+if(isset($_REQUEST['logout'])){
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
+
+if(isset($_REQUEST['detalle'])){
+    header('Location: detalle.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,8 +37,48 @@
         
             echo '<h1>PROYECTO LOGIN LOGOFF - PROGRAMA</h1>';
         ?>
-        <a href="./login.php">Salir</a>
-        <a href="./detalle.php">Detalle</a>
+        
+        <form action="<?php $_SERVER['PHP_SELF'] ?>" method='post'>
+            <input type='submit' name='logout' value='logout'/>
+            <input type='submit' name='detalle' value='detalle'/>
+        </form>
+        
+         <?php
+        //Incluir el archivo de conexión con la base de datos
+        require_once "../config/confDBPDO.php";
+        try{
+            //Conectar a la base de datos
+            $DAW205DB = new PDO(HOST, USER, PASSWORD);
+            //Cambiar el atributo ERRMODE para que muestre la excepcion en caso de error
+            $DAW205DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            //Query de seleccion
+            $consulta="SELECT * FROM T01_Usuario WHERE T01_CodUsuario='".$_SESSION['usuarioDAW205AppLoginLogoutTema5']."'";
+            $oResultado=$DAW205DB->prepare($consulta);
+            $oResultado->execute();
+
+            $resultado=$oResultado->fetchobject();
+
+            /* Si existe este usuario alamacenamos en la session un variable user para recuperala enPrograma.php */
+            if($resultado->T01_NumConexiones!=1){
+                echo 'Bienvenido '.$resultado->T01_DescUsuario.' es la '.$resultado->T01_NumConexiones.' vez que se connecta y su ultima connexion anterior fue "'.$_SESSION['FechaHoraUltimaConexionAnterior'].' "';
+                exit;
+            } else {
+                echo 'Bienvenido '.$resultado->T01_DescUsuario.' esta es la primera vez que se connecta.';
+            }
+        }catch(PDOException $excepcion){
+            $errorExcepcion=$excepcion->getCode();
+            $mensajeExcepcion=$excepcion->getMessage();
+
+            //Mostrar el mensaje de la excepcion
+            echo '<p>Error: '.$mensajeExcepcion.'</p>';
+            //Mostrar el codigo de la excepcion
+            echo '<p>Codigo de error: '.$errorExcepcion.'</p>';
+        }finally{
+            //Cerrar conexión
+            unset($DAW205DB);
+        }
+        ?>
         <footer>
             <table>
                 <tr>

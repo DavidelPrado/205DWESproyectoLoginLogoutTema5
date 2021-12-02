@@ -63,8 +63,11 @@
                 $consulta = "SELECT * FROM T01_Usuario WHERE T01_CodUsuario='{$aCorrecto['usuario']}'";
                 $oResultado = $DAW205DB->prepare($consulta);
                 $oResultado->execute();
-
-                $resultado = $oResultado->fetchobject();
+                $resultado=$oResultado->fetchobject();
+                
+                if($resultado!=null){
+                    $FechaHoraUltimaconexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
+                }
             } catch (PDOException $excepcion) {
                 $errorExcepcion = $excepcion->getCode();
                 $mensajeExcepcion = $excepcion->getMessage();
@@ -88,7 +91,8 @@
     }
 
     if ($entradaOK) {
-        $_SESSION['usuarioDAW205AppLoginLogout'] = $aCorrecto['usuario'];
+        $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
+        $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaconexionAnterior;
         try {
             //Conectar a la base de datos
             $DAW205DB = new PDO(HOST, USER, PASSWORD);
@@ -134,6 +138,7 @@
         <style>
             label{
                 display: block;
+                font-weight: bold;
             }
             form{
                 text-align: center;
@@ -151,18 +156,16 @@
     <body>
 
         <form action="<?php $_SERVER['PHP_SELF'] ?>" method='post'>
-            <fieldset>
-                <legend>Login:</legend>
+            <legend><h2>Login:</h2></legend>
 
-                <label>Usuario:</label>
-                <input type='text' name='usuario'/>
+                <label>Usuario:</label><br>
+                <input type='text' name='usuario'/><br><br>
 
-                <label>Contraseña:</label>
+                <label>Contraseña:</label><br>
                 <input type='password' name='contraseña'/>
                 <br><br>
                 <input type='submit' name='aceptar' value='Aceptar'/>
                 <input type='submit' name='cancelar' value='Cancelar'/>
-            </fieldset>
         </form>
 
         <footer>

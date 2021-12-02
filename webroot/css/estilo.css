@@ -1,5 +1,15 @@
-h1{
+body{
+    background: url(../../img/gato.jpg) no-repeat center center fixed;
+}
+
+h1:nth-child(1){
+    background-color: brown;
     text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 0px;
+    margin-bottom: 10px; 
+    color: white;
 }
 a{
     text-decoration: none;
