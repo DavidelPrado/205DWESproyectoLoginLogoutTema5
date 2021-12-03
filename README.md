@@ -1,6 +1,6 @@
-# proyectoLoginLogout
+# ProyectoLoginLogout
 
-#autor: David del Prado Losada
+# Autor: David del Prado Losada
 
 # Descripción
 Desarrollo de una aplicación con control de acceso.
