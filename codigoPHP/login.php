@@ -19,12 +19,6 @@
     define("OPCIONAL", 0);
     define("MIN_TAMANIO", 0);
 
-    //Definir array para almacenar errores
-    $aErrores = [
-        "usuario" => null,
-        "contraseña" => null,
-    ];
-
     //Definir array para almacenar respuestas correctas
     $aCorrecto = [
         "usuario" => null,
@@ -36,7 +30,7 @@
 
     //Comprobar si se ha pulsado el boton de cancelar
     if (isset($_REQUEST['cancelar'])) {
-        header("Location: ../index.php");
+        header("Location: ./../index.php");
     }
 
     //Comprobar si se ha pulsado el boton de aceptar
@@ -65,6 +59,7 @@
                 $oResultado->execute();
                 $resultado=$oResultado->fetchobject();
                 
+                //Almacenar la fecha y hora de la conexion anterior
                 if($resultado!=null){
                     $FechaHoraUltimaconexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
                 }
@@ -80,8 +75,9 @@
                 //Cerrar conexión
                 unset($DAW205DB);
             }
-
-            if (!$resultado || $resultado->T01_Password != hash('sha256', ($aCorrecto['usuario'] . $aCorrecto['contraseña']))) {
+            
+            //Comprobar que la contraseña es correcta
+            if (!$resultado || $resultado->T01_Password!=hash('sha256', ($aCorrecto['usuario'].$aCorrecto['contraseña']))) {
                 $entradaOK = false;
             }
         }
@@ -91,6 +87,7 @@
     }
 
     if ($entradaOK) {
+        //Almacenar el nombre del usuario y la ultima conexion en $_SESSION
         $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
         $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaconexionAnterior;
         try {
@@ -123,7 +120,7 @@
             unset($DAW205DB);
         }
 
-        header("Location: ./programa.php");
+        header("Location: programa.php");
         exit;
     }
 ?>
