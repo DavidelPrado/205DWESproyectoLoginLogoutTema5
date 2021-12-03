@@ -31,7 +31,7 @@
         <footer>
             <table>
                 <tr>
-                    <td><p>David del Prado Losada - DAW2</p></td>
+                    <td><p>David del Prado Losada - 03/12/2021 V2.0 - DAW2</p></td>
                     <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
