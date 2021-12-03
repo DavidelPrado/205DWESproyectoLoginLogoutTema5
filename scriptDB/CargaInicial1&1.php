@@ -8,7 +8,8 @@
         $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $sql=<<<PDO
-            insert into DB205DWESProyectoTema5.T01_Usuario(T01_CodUsuario, T01_Password, T01_DescUsuario) VALUES 
+            use dbs4868796;
+            insert into T01_Usuario(T01_CodUsuario, T01_Password, T01_DescUsuario) VALUES 
                 ('albertoF',SHA2('albertoFpaso',256),'AlbertoF'),
                 ('outmane',SHA2('outmanepaso',256),'Outmane'),
                 ('rodrigo',SHA2('rodrigopaso',256),'Rodrigo'),
@@ -23,10 +24,10 @@
                 ('antonio',SHA2('antoniopaso',256),'Antonio'),
                 ('albertoB',SHA2('albertoBpaso',256),'AlbertoB');
                     
-                insert into DB205DWESProyectoTema5.T02_Departamento(T02_CodDepartamento, T02_DescDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento) VALUES 
-                    ('INF', 'Departamento de informatica', 1000.0, NULL),
-                    ('CIE', 'Departamento de ciencia', 2000.0, NULL),
-                    ('HIS', 'Departamento de historia', 1000.0, NULL);
+            insert into T02_Departamento(T02_CodDepartamento, T02_DescDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento) VALUES 
+                ('INF', 'Departamento de informatica', 1000.0, NULL),
+                ('CIE', 'Departamento de ciencia', 2000.0, NULL),
+                ('HIS', 'Departamento de historia', 1000.0, NULL);
         PDO;
         
         $DB->exec($sql);
