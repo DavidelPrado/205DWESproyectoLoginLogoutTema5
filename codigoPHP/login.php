@@ -6,41 +6,46 @@
      * Ventana de login
      */
 
-    //Inicio de sesion
-    session_start();
+    //Comprobar si se ha pulsado el boton de cancelar
+    if(isset($_REQUEST['cancelar'])){
+        header("Location: ../index.php");
+    }
 
-    echo '<h1>PROYECTO LOGIN LOGOFF - LOGIN</h1>';
-
-    include '../core/libreriaValidacion.php';
+    //Comprobar si se ha pulsado el boton de registrarse
+    if(isset($_REQUEST['registrarse'])){
+        header("Location: registro.php");
+    }
+    
+    include "../core/libreriaValidacion.php";
     include "../config/confDBPDO.php";
 
     //Definir constantes
     define("OBLIGATORIO", 1);
     define("OPCIONAL", 0);
     define("MIN_TAMANIO", 0);
-
-    //Definir array para almacenar respuestas correctas
-    $aCorrecto = [
-        "usuario" => null,
-        "contraseña" => null,
+    
+    //Definir array para almacenar errores
+    $aErrores=[
+        "usuario"=>null,
+        "contraseña"=>null,
     ];
-
+    
+    //Definir array para almacenar respuestas correctas
+    $aCorrecto=[
+        "usuario"=>null,
+        "contraseña"=>null,
+    ];
+    
     //Inicializar variable que controlara si los campos estan correctos
-    $entradaOK = true;
-
-    //Comprobar si se ha pulsado el boton de cancelar
-    if (isset($_REQUEST['cancelar'])) {
-        header("Location: ./../index.php");
-    }
+    $entradaOK=true;
 
     //Comprobar si se ha pulsado el boton de aceptar
-    if (isset($_REQUEST['aceptar'])) {
-        //Comprobar si los campos son correctos
-        if (validacionFormularios::comprobarAlfaNumerico($_REQUEST["usuario"], 255, MIN_TAMANIO, OBLIGATORIO) || validacionFormularios::comprobarAlfaNumerico($_REQUEST["contraseña"], 255, MIN_TAMANIO, OBLIGATORIO)) {
-            $entradaOK = true;
-        }
-
-        if ($entradaOK) {
+    if(isset($_REQUEST['aceptar'])){
+        $aErrores["usuario"]=validacionFormularios::comprobarAlfaNumerico($_REQUEST["usuario"], 255, MIN_TAMANIO, OBLIGATORIO);
+        $aErrores["constraseña"]=validacionFormularios::validarPassword($_REQUEST["contraseña"], 8, MIN_TAMANIO, 1, OBLIGATORIO);
+        
+        //Si no hay errores comprueba que el usuario y la contraseña sean correctos
+        if($aErrores["usuario"]==null && $aErrores["constraseña"]==null){
             //Almacenar las respuestas correctas en el array $aCorrecto
             $aCorrecto = [
                 "usuario" => $_REQUEST["usuario"],
@@ -61,24 +66,20 @@
                 
                 //Almacenar la fecha y hora de la conexion anterior
                 if($resultado!=null){
-                    $FechaHoraUltimaconexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
+                    $FechaHoraUltimaConexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
+                }
+                //Comprobar que la contraseña es correcta
+                if (!$resultado || $resultado->T01_Password!=hash('sha256', ($aCorrecto['usuario'].$aCorrecto['contraseña']))) {
+                    $entradaOK = false;
                 }
             } catch (PDOException $excepcion) {
                 $errorExcepcion = $excepcion->getCode();
                 $mensajeExcepcion = $excepcion->getMessage();
 
-                //Mostrar el mensaje de la excepcion
                 echo '<p>Error: ' . $mensajeExcepcion . '</p>';
-                //Mostrar el codigo de la excepcion
                 echo '<p>Codigo de error: ' . $errorExcepcion . '</p>';
             } finally {
-                //Cerrar conexión
                 unset($DAW205DB);
-            }
-            
-            //Comprobar que la contraseña es correcta
-            if (!$resultado || $resultado->T01_Password!=hash('sha256', ($aCorrecto['usuario'].$aCorrecto['contraseña']))) {
-                $entradaOK = false;
             }
         }
     } else {
@@ -87,9 +88,11 @@
     }
 
     if ($entradaOK) {
+        //Inicar la session
+        session_start();
         //Almacenar el nombre del usuario y la ultima conexion en $_SESSION
         $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
-        $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaconexionAnterior;
+        $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaConexionAnterior;
         try {
             //Conectar a la base de datos
             $DAW205DB = new PDO(HOST, USER, PASSWORD);
@@ -98,7 +101,7 @@
 
             $oDateTime = new DateTime();
 
-            //Query de seleccion
+            //Query de actualizacion
             $consulta = <<<PDO
                     UPDATE T01_Usuario SET T01_NumConexiones=T01_NumConexiones+1,
                     T01_FechaHoraUltimaConexion = '{$oDateTime->format("y-m-d h:i:s")}'
@@ -107,21 +110,17 @@
 
             $oResultado = $DAW205DB->prepare($consulta);
             $oResultado->execute();
+            
+            header("Location: programa.php");
         } catch (PDOException $excepcion) {
             $errorExcepcion = $excepcion->getCode();
             $mensajeExcepcion = $excepcion->getMessage();
 
-            //Mostrar el mensaje de la excepcion
             echo '<p>Error: ' . $mensajeExcepcion . '</p>';
-            //Mostrar el codigo de la excepcion
             echo '<p>Codigo de error: ' . $errorExcepcion . '</p>';
         } finally {
-            //Cerrar conexión
             unset($DAW205DB);
         }
-
-        header("Location: programa.php");
-        exit;
     }
 ?>
 
@@ -151,7 +150,7 @@
         <title>Login</title>
     </head>
     <body>
-
+        <h1>PROYECTO LOGIN LOGOFF - LOGIN</h1>
         <form action="<?php $_SERVER['PHP_SELF'] ?>" method='post'>
             <legend><h2>Login:</h2></legend>
 
@@ -163,6 +162,7 @@
                 <br><br>
                 <input type='submit' name='aceptar' value='Aceptar'/>
                 <input type='submit' name='cancelar' value='Cancelar'/>
+                <input type='submit' name='registrarse' value='Registrarse'/>
         </form>
 
         <footer>
