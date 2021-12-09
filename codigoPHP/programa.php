@@ -1,18 +1,18 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuarioDAW205AppLoginLogoutTema5'])) {
-    header('Location: login.php');
+    header('Location: ../codigoPHP/login.php');
 }
 
 if(isset($_REQUEST['logout'])){
     session_unset();
     session_destroy();
-    header('Location: login.php');
+    header('Location: ../codigoPHP/login.php');
     exit;
 }
 
 if(isset($_REQUEST['detalle'])){
-    header('Location: detalle.php');
+    header('Location: ../codigoPHP/detalle.php');
     exit;
 }
 ?>
@@ -67,10 +67,10 @@ if(isset($_REQUEST['detalle'])){
 
             /* Si existe este usuario alamacenamos en la session un variable user para recuperala enPrograma.php */
             if($resultado->T01_NumConexiones!=1){
-                echo 'Bienvenido '.$resultado->T01_DescUsuario.' es la '.$resultado->T01_NumConexiones.' vez que se connecta y su ultima connexion anterior fue "'.$_SESSION['FechaHoraUltimaConexionAnterior'].' "';
+                echo 'Bienvenido '.$resultado->T01_DescUsuario.' es la '.$resultado->T01_NumConexiones.' vez que se conecta y su ultima conexion fue '.$_SESSION['FechaHoraUltimaConexionAnterior'].'';
                 exit;
             } else {
-                echo 'Bienvenido '.$resultado->T01_DescUsuario.' esta es la primera vez que se connecta.';
+                echo 'Bienvenido '.$resultado->T01_DescUsuario.' esta es la primera vez que se conecta.';
             }
         }catch(PDOException $excepcion){
             $errorExcepcion=$excepcion->getCode();
