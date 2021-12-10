@@ -11,6 +11,11 @@ if(isset($_REQUEST['logout'])){
     exit;
 }
 
+if(isset($_REQUEST['editar'])){
+    header('Location: ../codigoPHP/editarPerfil.php');
+    exit;
+}
+
 if(isset($_REQUEST['detalle'])){
     header('Location: ../codigoPHP/detalle.php');
     exit;
@@ -47,6 +52,7 @@ if(isset($_REQUEST['detalle'])){
         <form action="<?php $_SERVER['PHP_SELF'] ?>" method='post'>
             <input type='submit' name='logout' value='Logout'/>
             <input type='submit' name='detalle' value='Detalle'/>
+            <input type='submit' name='editar' value='Editar Perfil'/>
         </form>
         
          <?php

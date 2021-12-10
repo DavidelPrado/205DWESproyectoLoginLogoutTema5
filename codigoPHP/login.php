@@ -88,11 +88,6 @@
     }
 
     if ($entradaOK) {
-        //Inicar la session
-        session_start();
-        //Almacenar el nombre del usuario y la ultima conexion en $_SESSION
-        $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
-        $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaConexionAnterior;
         try {
             //Conectar a la base de datos
             $DAW205DB = new PDO(HOST, USER, PASSWORD);
@@ -111,7 +106,14 @@
             $oResultado = $DAW205DB->prepare($consulta);
             $oResultado->execute();
             
+            //Inicar la session
+            session_start();
+            //Almacenar el nombre del usuario y la ultima conexion en $_SESSION
+            $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
+            $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaConexionAnterior;
+            
             header("Location: programa.php");
+            exit;
         } catch (PDOException $excepcion) {
             $errorExcepcion = $excepcion->getCode();
             $mensajeExcepcion = $excepcion->getMessage();

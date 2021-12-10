@@ -120,6 +120,7 @@
             $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaConexionAnterior;
 
             header("Location: programa.php");
+            exit;
         } catch (PDOException $excepcion) {
             $errorExcepcion = $excepcion->getCode();
             $mensajeExcepcion = $excepcion->getMessage();
