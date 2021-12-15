@@ -9,6 +9,7 @@
     //Comprobar si se ha pulsado el boton de cancelar
     if(isset($_REQUEST['cancelar'])){
         header("Location: login.php");
+        exit;
     }
     
     include "../core/libreriaValidacion.php";
@@ -69,11 +70,13 @@
                 //Si la consulta es mayor que 0, el usuario ya existe en la DB
                 if($oResultado->rowCount()>0){ 
                     $aErrores['CodUsuario'] = "El usuario ya existe.";
+                    $entradaOK=false;
                 }
                 
                 //Los dos campos deben ser iguales
                 if($aCorrecto['Password']!=$aCorrecto['RepetirPassword']){ 
                     $aErrores['RepetirPassword']="Las contraseñas no coinciden.";
+                    $entradaOK=false;
                 }
             } catch (PDOException $excepcion) {
                 $errorExcepcion = $excepcion->getCode();
@@ -208,7 +211,7 @@
             <table>
                 <tr>
                     <td><p>David del Prado Losada - DAW2</p></td>
-                    <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
+                    <td><a href="https://github.com/DavidelPrado/205DWESproyectoLoginLogoutTema5" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
         </footer>

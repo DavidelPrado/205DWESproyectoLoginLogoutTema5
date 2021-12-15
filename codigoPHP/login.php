@@ -9,13 +9,15 @@
     //Comprobar si se ha pulsado el boton de cancelar
     if(isset($_REQUEST['cancelar'])){
         header("Location: ../index.php");
+        exit;
     }
 
     //Comprobar si se ha pulsado el boton de registrarse
     if(isset($_REQUEST['registrarse'])){
         header("Location: registro.php");
+        exit;
     }
-    
+            
     include "../core/libreriaValidacion.php";
     include "../config/confDBPDO.php";
 
@@ -27,13 +29,13 @@
     //Definir array para almacenar errores
     $aErrores=[
         "usuario"=>null,
-        "contraseña"=>null,
+        "Password"=>null,
     ];
     
     //Definir array para almacenar respuestas correctas
     $aCorrecto=[
         "usuario"=>null,
-        "contraseña"=>null,
+        "Password"=>null,
     ];
     
     //Inicializar variable que controlara si los campos estan correctos
@@ -42,14 +44,14 @@
     //Comprobar si se ha pulsado el boton de aceptar
     if(isset($_REQUEST['aceptar'])){
         $aErrores["usuario"]=validacionFormularios::comprobarAlfaNumerico($_REQUEST["usuario"], 255, MIN_TAMANIO, OBLIGATORIO);
-        $aErrores["constraseña"]=validacionFormularios::validarPassword($_REQUEST["contraseña"], 8, MIN_TAMANIO, 1, OBLIGATORIO);
+        $aErrores["Password"]=validacionFormularios::validarPassword($_REQUEST["Password"], 8, MIN_TAMANIO, 1, OBLIGATORIO);
         
-        //Si no hay errores comprueba que el usuario y la contraseña sean correctos
-        if($aErrores["usuario"]==null && $aErrores["constraseña"]==null){
+        //Si no hay errores comprueba que el usuario y la Password sean correctos
+        if($aErrores["usuario"]==null && $aErrores["Password"]==null){
             //Almacenar las respuestas correctas en el array $aCorrecto
             $aCorrecto = [
                 "usuario" => $_REQUEST["usuario"],
-                "contraseña" => $_REQUEST["contraseña"],
+                "Password" => $_REQUEST["Password"]
             ];
 
             try {
@@ -59,17 +61,20 @@
                 $DAW205DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 //Query de seleccion
-                $consulta = "SELECT * FROM T01_Usuario WHERE T01_CodUsuario='{$aCorrecto['usuario']}'";
+                $consulta = "SELECT T01_FechaHoraUltimaConexion FROM T01_Usuario WHERE T01_CodUsuario='{$aCorrecto['usuario']}' AND T01_Password=:Password";
                 $oResultado = $DAW205DB->prepare($consulta);
-                $oResultado->execute();
+                $parametros= [
+                    ":Password" => hash("sha256", ($aCorrecto["usuario"].$aCorrecto["Password"]))
+                ];
+                $oResultado->execute($parametros);
                 $resultado=$oResultado->fetchobject();
                 
-                //Almacenar la fecha y hora de la conexion anterior
-                if($resultado!=null){
-                    $FechaHoraUltimaConexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
+                if($oResultado->rowCount()==0){
+                    $aErrores["Password"]="Error en la Password";
                 }
-                //Comprobar que la contraseña es correcta
-                if (!$resultado || $resultado->T01_Password!=hash('sha256', ($aCorrecto['usuario'].$aCorrecto['contraseña']))) {
+                
+                //Si el resultado esta vacio es que el usuario o la Password están incorrectos
+                if(!$resultado){
                     $entradaOK = false;
                 }
             } catch (PDOException $excepcion) {
@@ -86,14 +91,19 @@
         //El formulario no se ha rellenado nunca
         $entradaOK = false;
     }
-
-    if ($entradaOK) {
+    
+    if($entradaOK){
         try {
+            
             //Conectar a la base de datos
             $DAW205DB = new PDO(HOST, USER, PASSWORD);
             //Configurar las excepciones
             $DAW205DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+            
+            //Almacenar la fecha y hora de la conexion anterior
+            $FechaHoraUltimaConexionAnterior=$resultado->T01_FechaHoraUltimaConexion;
+            
+            //Guardo la hora actual
             $oDateTime = new DateTime();
 
             //Query de actualizacion
@@ -109,10 +119,10 @@
             //Inicar la session
             session_start();
             //Almacenar el nombre del usuario y la ultima conexion en $_SESSION
-            $_SESSION['usuarioDAW205AppLoginLogoutTema5']=$aCorrecto['usuario'];
+            $_SESSION['usuarioDAW205AppLoginLogout']=$aCorrecto['usuario'];
             $_SESSION['FechaHoraUltimaConexionAnterior']=$FechaHoraUltimaConexionAnterior;
             
-            header("Location: programa.php");
+            header('Location: programa.php');
             exit;
         } catch (PDOException $excepcion) {
             $errorExcepcion = $excepcion->getCode();
@@ -160,7 +170,7 @@
                 <input type='text' name='usuario'/><br><br>
 
                 <label>Contraseña:</label><br>
-                <input type='password' name='contraseña'/>
+                <input type='password' name='Password'/>
                 <br><br>
                 <input type='submit' name='aceptar' value='Aceptar'/>
                 <input type='submit' name='cancelar' value='Cancelar'/>
@@ -171,7 +181,7 @@
             <table>
                 <tr>
                     <td><p>David del Prado Losada - DAW2</p></td>
-                    <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
+                    <td><a href="https://github.com/DavidelPrado/205DWESproyectoLoginLogoutTema5" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
         </footer>

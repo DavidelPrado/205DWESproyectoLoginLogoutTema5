@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuarioDAW205AppLoginLogoutTema5'])) {
+if(!isset($_SESSION['usuarioDAW205AppLoginLogout'])){
     header('Location: ../codigoPHP/login.php');
+    exit;
 }
 
 if(isset($_REQUEST['logout'])){
@@ -65,7 +66,7 @@ if(isset($_REQUEST['detalle'])){
             $DAW205DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             //Query de seleccion
-            $consulta="SELECT * FROM T01_Usuario WHERE T01_CodUsuario='".$_SESSION['usuarioDAW205AppLoginLogoutTema5']."'";
+            $consulta="SELECT * FROM T01_Usuario WHERE T01_CodUsuario='".$_SESSION['usuarioDAW205AppLoginLogout']."'";
             $oResultado=$DAW205DB->prepare($consulta);
             $oResultado->execute();
 
@@ -95,7 +96,7 @@ if(isset($_REQUEST['detalle'])){
             <table>
                 <tr>
                     <td><p>David del Prado Losada - DAW2</p></td>
-                    <td><a href="https://github.com/DavidelPrado" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
+                    <td><a href="https://github.com/DavidelPrado/205DWESproyectoLoginLogoutTema5" target="_blank"><img src="../../img/git.png" width="50px" height="50px"></img></a></td>
                 </tr>
             </table>
         </footer>
